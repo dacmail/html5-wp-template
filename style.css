@@ -1,0 +1,62 @@
+/*
+      Theme Name: UNGRYNERD
+      Theme URI: http://www.ungrynerd.com
+      Version: 1.0
+      Author: Daniel Aguilar
+      Author URI: http://www.e-dac.es
+*/
+
+/* FIXES */
+*, html { 
+	margin:0; 
+	padding:0;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix {display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+
+/* END FIXES */
+a {
+	text-decoration:none;
+	color:;
+}
+a:hover {
+	
+}
+
+body {
+	font-family:;
+}
+header {
+	
+}
+#container {
+	
+}
+	#content {
+	
+	}
+	#content p {
+		margin:10px 0px;
+	}
+	#content .post-content ul, #content .post-content ol {
+		margin:10px;
+	}
+	aside {
+	
+	}
+footer {
+	
+}
+	
