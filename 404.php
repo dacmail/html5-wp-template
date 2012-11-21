@@ -1,8 +1,8 @@
 <?php get_header() ?>
 <div id="container" class="<? body_class('clearfix'); ?>">
 	<section id="content" class="clearfix">
-		<? get_template_part( 'loop', 'single' ); ?>
+		<h1>La página que buscas no existe</h1>
+		<h2><a href="<? bloginfo('home'); ?>">Vuelve a la página de inicio</a></h2>
 	</section>
-	<?php get_sidebar() ?>
 </div>
 <?php get_footer() ?>

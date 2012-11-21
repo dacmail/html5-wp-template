@@ -1,32 +1,30 @@
 <?php // Do not delete these lines
 	if (isset($_SERVER['SCRIPT_FILENAME']) && 'comments.php' == basename($_SERVER['SCRIPT_FILENAME']))
 		die ('Por favor, no cargue esta página directamente.');
-	
+
 	if ( post_password_required() ) { ?>
-		<p class="nocomments">Esta noticia está protegida por contraseña. Introdúzcala para ver los comentarios</p> 
+		<p class="nocomments">Esta noticia está protegida por contraseña. Introdúzcala para ver los comentarios</p>
 	<?php
 		return;
 	}
 	?>
 
 <?php if ( have_comments() ) : ?>
-	<div id="comments-title">
-		<h3 id="comments"><?php comments_number('Sin comentarios','1 comentario','% comentarios');?> </h3>
-	</div>
-	
-	<div class="navigation_comment clearfix">
-		<div class="alignleft"><?php previous_comments_link() ?></div>
-		<div class="alignright"><?php next_comments_link() ?></div>
-	</div>
+	<h3 id="comments"><?php comments_number('Sin comentarios','1 comentario','% comentarios');?> </h3>
+
+	<nav class="navigation_comment clearfix">
+		<?php previous_comments_link() ?>
+		<?php next_comments_link() ?>
+	</nav>
 
 	<ol class="commentlist">
-	<?php wp_list_comments("callback=comentarios");?>
+		<?php wp_list_comments("callback=comentarios");?>
 	</ol>
 
-	<div class="navigation_comment clearfix">
-		<div class="alignleft"><?php previous_comments_link() ?></div>
-		<div class="alignright"><?php next_comments_link() ?></div>
-	</div>
+	<nav class="navigation_comment clearfix">
+		<?php previous_comments_link() ?>
+		<?php next_comments_link() ?>
+	</nav>
 
  <?php else : // this is displayed if there are no comments so far ?>
 
