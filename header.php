@@ -5,12 +5,12 @@
 	<title> <?php bloginfo('name'); ?> <?php wp_title(); ?></title>
 	<link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" media="all" />
 	<link rel="shortcut icon" href="<?php bloginfo('template_directory')?>/favicon.ico" />
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-	<script src="<?php bloginfo('template_directory')?>/js/default.js"></script>
 	<!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <? wp_enqueue_script('jquery'): ?>
 	<?php wp_head(); ?>
+	<script src="<?php bloginfo('template_directory')?>/js/default.js"></script>
 </head>
 <body>
 	<header id="header">
