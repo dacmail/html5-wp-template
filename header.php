@@ -8,7 +8,7 @@
 	<!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <? wp_enqueue_script('jquery'): ?>
+    <? wp_enqueue_script('jquery'); ?>
 	<?php wp_head(); ?>
 	<script src="<?php bloginfo('template_directory')?>/js/default.js"></script>
 </head>
