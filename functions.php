@@ -1,4 +1,13 @@
 <?php
+	// Content width
+	if ( ! isset( $content_width ) ) $content_width = 900;
+
+	// Comments reply
+	if ( is_singular() ) wp_enqueue_script("comment-reply");
+
+	// automatic feed links
+	add_theme_support('automatic-feed-links');
+
 	// Definición widgets
 	if ( function_exists('register_sidebar') ){
 		 register_sidebar(array(
@@ -42,11 +51,11 @@
 		  <?php echo get_avatar($comment,$size='75' ); ?>
 	    	<div class="comment-content">
 	    		<h5 class="author">
-					<? comment_author_link(); ?>
+					<?php comment_author_link(); ?>
 					<?php if ($comment->comment_approved == '0') : ?>
-			         	<em><?php _e('Your comment is awaiting moderation.') ?></em>
+			         	<em><?php _e('Your comment is awaiting moderation.', 'ungrynerd') ?></em>
 			      	<?php endif; ?>
-			      	<?php edit_comment_link(__('(Edit)'),'  ','') ?>
+			      	<?php edit_comment_link(__('(Edit)', 'ungrynerd'),'  ','') ?>
 				</h5>
 	    		<?php comment_text() ?>
 	    	</div>

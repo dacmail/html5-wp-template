@@ -1,16 +1,16 @@
 <?php // Do not delete these lines
 	if (isset($_SERVER['SCRIPT_FILENAME']) && 'comments.php' == basename($_SERVER['SCRIPT_FILENAME']))
-		die ('Por favor, no cargue esta página directamente.');
+		die ( _('Por favor, no cargue esta p&aacute;gina directamente.', 'ungrynerd'));
 
 	if ( post_password_required() ) { ?>
-		<p class="nocomments">Esta noticia está protegida por contraseña. Introdúzcala para ver los comentarios</p>
+		<p class="nocomments"><?php _e('Esta noticia est&aacute; protegida por contrase&ntilde;a. Introd&uacute;zcala para ver los comentarios', 'ungrynerd'); ?></p>
 	<?php
 		return;
 	}
 	?>
 
 <?php if ( have_comments() ) : ?>
-	<h3 id="comments"><?php comments_number('Sin comentarios','1 comentario','% comentarios');?> </h3>
+	<h3 id="comments"><?php comments_number( _('Sin comentarios', 'ungrynerd'), _('1 comentario', 'ungrynerd'), _('% comentarios', 'ungrynerd'));?> </h3>
 
 	<nav class="navigation_comment clearfix">
 		<?php previous_comments_link() ?>
@@ -33,7 +33,7 @@
 
 	 <?php else : // comments are closed ?>
 		<!-- If comments are closed. -->
-		<p class="nocomments">Los comentarios están cerrados</p>
+		<p class="nocomments"><?php _e('Los comentarios est&aacute;n cerrados', 'ungrynerd'); ?></p>
 
 	<?php endif; ?>
 <?php endif; ?>
