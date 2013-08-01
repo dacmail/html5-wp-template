@@ -1,4 +1,10 @@
 <?php
+	//Meta Boxes
+	define( 'RWMB_URL', trailingslashit( get_stylesheet_directory_uri() . '/meta-box' ) );
+	define( 'RWMB_DIR', trailingslashit( get_stylesheet_directory() . '/meta-box' ) );
+	require_once RWMB_DIR . 'meta-box.php';
+	include 'meta-boxes.php';
+
 	// Content width
 	if ( ! isset( $content_width ) ) $content_width = 900;
 
