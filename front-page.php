@@ -1,5 +1,5 @@
 <?php get_header() ?>
-<div id="container" <?php body_class('clearfix'); ?>>
+<div id="container" class="clearfix">
 	<section id="content" class="clearfix">
 		<?php $featured = new WP_Query(array('meta_key' => '_ungrynerd_featured', 'meta_value' => 'on', 'post_type'=>'page, post', 'posts_per_page' => -1)); ?>
 		<?php while ($featured->have_posts()) : $featured->the_post(); ?>
