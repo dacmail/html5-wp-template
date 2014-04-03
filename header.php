@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="content-Type" content="text/html; charset=utf-8" />
 	<title> <?php bloginfo('name'); ?> <?php wp_title(); ?></title>
 	<link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" media="all" />
