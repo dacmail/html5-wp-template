@@ -10,7 +10,7 @@
 					</a>
 				</h1>
 				<div class="post-content">
-					<?php the_content( _('Leer m&aacute;s &raquo;', 'ungrynerd')); ?>
+					<?php the_content( __('Leer m&aacute;s &raquo;', 'ungrynerd')); ?>
 					<?php wp_link_pages(); ?>
 				</div>
 				<div class="meta"><?php the_tags(); ?></div>
@@ -18,8 +18,8 @@
 		<?php endwhile; ?>
 	</section>
 	<nav class="pagination">
-		<?php previous_posts_link( _('Anterior', 'ungrynerd')); ?>
-		<?php next_posts_link( _('Siguiente', 'ungrynerd')); ?>
+		<?php previous_posts_link( __('Anterior', 'ungrynerd')); ?>
+		<?php next_posts_link( __('Siguiente', 'ungrynerd')); ?>
 	</nav>
 	<?php get_sidebar() ?>
 </div>

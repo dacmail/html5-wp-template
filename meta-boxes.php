@@ -13,7 +13,7 @@ $meta_boxes = array();
 
 $meta_boxes[] = array(
         'id'         => 'general_options',
-        'title'      =>  _('Options'),
+        'title'      =>  __('Options'),
         'pages'      => array( 'page', 'post' ), // Post type
         'context'    => 'normal',
         'priority'   => 'high',
