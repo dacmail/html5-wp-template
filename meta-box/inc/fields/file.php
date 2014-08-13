@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'RWMB_File_Field' ) )
 {
-	class RWMB_File_Field
+	class RWMB_File_Field extends RWMB_Field
 	{
 		/**
 		 * Enqueue scripts and styles
@@ -14,7 +14,7 @@ if ( ! class_exists( 'RWMB_File_Field' ) )
 		static function admin_enqueue_scripts()
 		{
 			wp_enqueue_style( 'rwmb-file', RWMB_CSS_URL . 'file.css', array(), RWMB_VER );
-			wp_enqueue_script( 'rwmb-file', RWMB_JS_URL . 'file.js', array( 'jquery', 'wp-ajax-response' ), RWMB_VER, true );
+			wp_enqueue_script( 'rwmb-file', RWMB_JS_URL . 'file.js', array( 'jquery' ), RWMB_VER, true );
 			wp_localize_script( 'rwmb-file', 'rwmbFile', array(
 				'maxFileUploadsSingle' => __( 'You may only upload maximum %d file', 'rwmb' ),
 				'maxFileUploadsPlural' => __( 'You may only upload maximum %d files', 'rwmb' ),
@@ -65,21 +65,20 @@ if ( ! class_exists( 'RWMB_File_Field' ) )
 			$ok = $force_delete ? wp_delete_attachment( $attachment_id ) : true;
 
 			if ( $ok )
-				RW_Meta_Box::ajax_response( '', 'success' );
+				wp_send_json_success();
 			else
-				RW_Meta_Box::ajax_response( __( 'Error: Cannot delete file', 'rwmb' ), 'error' );
+				wp_send_json_error( __( 'Error: Cannot delete file', 'rwmb' ) );
 		}
 
 		/**
 		 * Get field HTML
 		 *
-		 * @param string $html
 		 * @param mixed  $meta
 		 * @param array  $field
 		 *
 		 * @return string
 		 */
-		static function html( $html, $meta, $field )
+		static function html( $meta, $field )
 		{
 			$i18n_title = apply_filters( 'rwmb_file_upload_string', _x( 'Upload Files', 'file upload', 'rwmb' ), $field );
 			$i18n_more  = apply_filters( 'rwmb_file_add_string', _x( '+ Add new file', 'file upload', 'rwmb' ), $field );
@@ -258,21 +257,16 @@ if ( ! class_exists( 'RWMB_File_Field' ) )
 		/**
 		 * Standard meta retrieval
 		 *
-		 * @param mixed $meta
 		 * @param int   $post_id
 		 * @param array $field
 		 * @param bool  $saved
 		 *
 		 * @return mixed
 		 */
-		static function meta( $meta, $post_id, $saved, $field )
+		static function meta( $post_id, $saved, $field )
 		{
-			$meta = RW_Meta_Box::meta( $meta, $post_id, $saved, $field );
-
-			if ( empty( $meta ) )
-				return array();
-
-			return (array) $meta;
+			$meta = parent::meta( $post_id, $saved, $field );
+			return empty( $meta ) ? array() : (array) $meta;
 		}
 	}
 }

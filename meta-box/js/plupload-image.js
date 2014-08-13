@@ -10,13 +10,13 @@ jQuery( function( $ )
 		$dragndrop.removeClass('hidden');
 	} );
 
-	$('.rwmb-drag-drop').each(function()
+	$( '.rwmb-drag-drop' ).each(function()
 	{
 		// Declare vars
 		var $dropArea = $( this ),
 			$imageList = $dropArea.siblings( '.rwmb-uploaded' ),
 			uploaderData = $dropArea.data( 'js_options' ),
-			rwmbUploader = {};
+			uploader = {};
 
 		// Extend uploaderData
 		uploaderData.multipart_params = $.extend(
@@ -28,13 +28,13 @@ jQuery( function( $ )
 		);
 
 		// Create uploader
-		rwmbUploader = new plupload.Uploader( uploaderData );
-		rwmbUploader.init();
+		uploader = new plupload.Uploader( uploaderData );
+		uploader.init();
 
 		// Add files
-		rwmbUploader.bind( 'FilesAdded', function( up, files )
+		uploader.bind( 'FilesAdded', function( up, files )
 		{
-			var maxFileUploads = $imageList.data('max_file_uploads'),
+			var maxFileUploads = $imageList.data( 'max_file_uploads' ),
 				uploaded = $imageList.children().length,
 				msg = maxFileUploads > 1 ? rwmbFile.maxFileUploadsPlural : rwmbFile.maxFileUploadsSingle;
 
@@ -53,7 +53,7 @@ jQuery( function( $ )
 			}
 
 			// Hide drag & drop section if reach max file uploads
-			if ( uploaded + files.length >= maxFileUploads )
+			if ( maxFileUploads > 0 && uploaded + files.length >= maxFileUploads )
 				$dropArea.addClass( 'hidden' );
 
 			max = parseInt( up.settings.max_file_size, 10 );
@@ -71,17 +71,17 @@ jQuery( function( $ )
 
 		} );
 
-		rwmbUploader.bind( 'Error', function( up, e )
+		uploader.bind( 'Error', function( up, e )
 		{
 			addLoading( up, e.file, $imageList );
 			removeError( e.file );
 			up.removeFile( e.file );
 		} );
 
-		rwmbUploader.bind( 'FileUploaded', function( up, file, response )
+		uploader.bind( 'FileUploaded', function( up, file, r )
 		{
-			var res = wpAjax.parseAjaxResponse( $.parseXML( response.response ), 'ajax-response' );
-			false === res.errors ? $( 'li#' + file.id ).replaceWith( res.responses[0].data ) : removeError( file );
+			r = $.parseJSON( r.response );
+			r.success ? $( 'li#' + file.id ).replaceWith( r.data ) : removeError( file );
 		} );
 	});
 

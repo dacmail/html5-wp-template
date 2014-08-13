@@ -65,8 +65,7 @@ if ( ! class_exists( 'RWMB_Plupload_Image_Field' ) )
 
 				// Save file ID in meta field
 				add_post_meta( $post_id, $field_id, $id, false );
-
-				RW_Meta_Box::ajax_response( self::img_html( $id ), 'success' );
+				wp_send_json_success( self::img_html( $id ) );
 			}
 
 			exit;
@@ -89,13 +88,12 @@ if ( ! class_exists( 'RWMB_Plupload_Image_Field' ) )
 		/**
 		 * Get field HTML
 		 *
-		 * @param string $html
 		 * @param mixed  $meta
 		 * @param array  $field
 		 *
 		 * @return string
 		 */
-		static function html( $html, $meta, $field )
+		static function html( $meta, $field )
 		{
 			if ( ! is_array( $meta ) )
 				$meta = ( array ) $meta;
@@ -113,7 +111,7 @@ if ( ! class_exists( 'RWMB_Plupload_Image_Field' ) )
 				$classes[] = 'hidden';
 
 
-			$html .= self::get_uploaded_images( $meta, $field );
+			$html = self::get_uploaded_images( $meta, $field );
 
 			// Show form upload
 			$html .= sprintf(

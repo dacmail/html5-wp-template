@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( !class_exists( 'RWMB_Map_Field' ) )
 {
-	class RWMB_Map_Field
+	class RWMB_Map_Field extends RWMB_Field
 	{
 		/**
 		 * Enqueue scripts and styles
@@ -20,22 +20,22 @@ if ( !class_exists( 'RWMB_Map_Field' ) )
 		/**
 		 * Get field HTML
 		 *
-		 * @param string $html
 		 * @param mixed  $meta
 		 * @param array  $field
 		 *
 		 * @return string
 		 */
-		static function html( $html, $meta, $field )
+		static function html( $meta, $field )
 		{
 			$address = isset( $field['address_field'] ) ? $field['address_field'] : false;
 
 			$html = '<div class="rwmb-map-field">';
 
 			$html .= sprintf(
-				'<div class="rwmb-map-canvas" style="%s"></div>
+				'<div class="rwmb-map-canvas" style="%s"%s></div>
 				<input type="hidden" name="%s" class="rwmb-map-coordinate" value="%s">',
 				isset( $field['style'] ) ? $field['style'] : '',
+				isset( $field['std'] ) ? " data-default-loc=\"{$field['std']}\"" : '',
 				$field['field_name'],
 				$meta
 			);
