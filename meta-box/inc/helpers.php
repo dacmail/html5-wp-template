@@ -28,6 +28,7 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 		 * Shortcode to display meta value
 		 *
 		 * @param $atts Array of shortcode attributes, same as meta() function, but has more "meta_key" parameter
+		 *
 		 * @see meta() function below
 		 *
 		 * @return string
@@ -117,7 +118,7 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 				$content = $meta;
 			}
 
-			return apply_filters( __FUNCTION__, $content );
+			return apply_filters( 'rwmb_shortcode', $content );
 		}
 
 		/**
@@ -138,20 +139,24 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 			) );
 
 			// Set 'multiple' for fields based on 'type'
-			if ( !isset( $args['multiple'] ) )
+			if ( ! isset( $args['multiple'] ) )
 				$args['multiple'] = in_array( $args['type'], array( 'checkbox_list', 'file', 'file_advanced', 'image', 'image_advanced', 'plupload_image', 'thickbox_image' ) );
 
-			$meta = get_post_meta( $post_id, $key, !$args['multiple'] );
+			$meta = get_post_meta( $post_id, $key, ! $args['multiple'] );
 
 			// Get uploaded files info
 			if ( in_array( $args['type'], array( 'file', 'file_advanced' ) ) )
 			{
-				if ( is_array( $meta ) && !empty( $meta ) )
+				if ( is_array( $meta ) && ! empty( $meta ) )
 				{
 					$files = array();
 					foreach ( $meta as $id )
 					{
-						$files[$id] = self::file_info( $id );
+						// Get only info of existing attachments
+						if ( get_attached_file( $id ) )
+						{
+							$files[$id] = self::file_info( $id );
+						}
 					}
 					$meta = $files;
 				}
@@ -168,12 +173,16 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 					ORDER BY meta_id ASC
 				", $post_id, $key ) );
 
-				if ( is_array( $meta ) && !empty( $meta ) )
+				if ( is_array( $meta ) && ! empty( $meta ) )
 				{
 					$images = array();
 					foreach ( $meta as $id )
 					{
-						$images[$id] = self::image_info( $id, $args );
+						// Get only info of existing attachments
+						if ( get_attached_file( $id ) )
+						{
+							$images[$id] = self::image_info( $id, $args );
+						}
 					}
 					$meta = $images;
 				}
@@ -182,7 +191,7 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 			// Get terms
 			elseif ( 'taxonomy_advanced' == $args['type'] )
 			{
-				if ( !empty( $args['taxonomy'] ) )
+				if ( ! empty( $args['taxonomy'] ) )
 				{
 					$term_ids = array_map( 'intval', array_filter( explode( ',', $meta . ',' ) ) );
 
@@ -212,7 +221,7 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 				$meta = self::map( $key, $args, $post_id );
 			}
 
-			return apply_filters( __FUNCTION__, $meta, $key, $args, $post_id );
+			return apply_filters( 'rwmb_meta', $meta, $key, $args, $post_id );
 		}
 
 		/**
@@ -225,6 +234,7 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 		static function file_info( $id )
 		{
 			$path = get_attached_file( $id );
+
 			return array(
 				'ID'    => $id,
 				'name'  => basename( $path ),
@@ -253,7 +263,8 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 				return false;
 
 			$attachment = get_post( $id );
-			$path = get_attached_file( $id );
+			$path       = get_attached_file( $id );
+
 			return array(
 				'ID'          => $id,
 				'name'        => basename( $path ),
@@ -281,8 +292,8 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 		static function map( $key, $args = array(), $post_id = null )
 		{
 			$post_id = empty( $post_id ) ? get_the_ID() : $post_id;
-			$loc = get_post_meta( $post_id, $key, true );
-			if ( !$loc )
+			$loc     = get_post_meta( $post_id, $key, true );
+			if ( ! $loc )
 				return '';
 
 			$parts = array_map( 'trim', explode( ',', $loc ) );
@@ -292,12 +303,12 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 				$parts[2] = 14;
 
 			// Map parameters
-			$args = wp_parse_args( $args, array(
+			$args               = wp_parse_args( $args, array(
 				'width'        => '640px',
 				'height'       => '480px',
-				'marker'       => true,      // Display marker?
-				'marker_title' => '',        // Marker title, when hover
-				'info_window'  => '',        // Content of info window (when click on marker). HTML allowed
+				'marker'       => true, // Display marker?
+				'marker_title' => '', // Marker title, when hover
+				'info_window'  => '', // Content of info window (when click on marker). HTML allowed
 				'js_options'   => array(),
 			) );
 			$args['js_options'] = wp_parse_args( $args['js_options'], array(
@@ -380,7 +391,8 @@ if ( ! class_exists( 'RWMB_Helper' ) )
 			$html .= '} )();
 				</script>';
 
-			$counter++;
+			$counter ++;
+
 			return $html;
 		}
 	}
@@ -401,3 +413,61 @@ function rwmb_meta( $key, $args = array(), $post_id = null )
 {
 	return RWMB_Helper::meta( $key, $args, $post_id );
 }
+
+/**
+ * Get value of custom field.
+ * This is used to replace old version of rwmb_meta key. rwmb_meta will be used internally only.
+ *
+ * @uses   rwmb_meta()
+ * @param  string   $key     Meta key. Required.
+ * @param  int|null $post_id Post ID. null for current post. Optional.
+ * @return mixed             false if field doesn't exist. Field value otherwise.
+ */
+function rwmb_get_field( $key, $post_id = null )
+{
+	/**
+	 * Search all the registered meta box to find needed field
+	 * The field will have all needed parameters which we can pass to rwmb_meta function without
+	 * having users to manually set them (field type, multiple, ect.). So users only need to remember
+	 * field ID only.
+	 */
+	$found = false;
+	$meta_boxes = apply_filters( 'rwmb_meta_boxes', array() );
+	foreach ( $meta_boxes as $meta_box )
+	{
+		foreach ( $meta_box['fields'] as $field )
+		{
+			if ( $key == $field['id'] )
+			{
+				$found = true;
+				break;
+			}
+		}
+	}
+
+	// If field doesn't exist, return false
+	if ( ! $found )
+	{
+		return false;
+	}
+
+	// Normalize field to make sure all params are set properly
+	$field = wp_parse_args( $field, array(
+		'id'          => '',
+		'multiple'    => false,
+		'clone'       => false,
+		'std'         => '',
+		'desc'        => '',
+		'format'      => '',
+		'before'      => '',
+		'after'       => '',
+		'field_name'  => isset( $field['id'] ) ? $field['id'] : '',
+		'required'    => false,
+		'placeholder' => '',
+	) );
+	$field = call_user_func( array( RW_Meta_Box::get_class_name( $field ), 'normalize_field' ), $field );
+
+	// Get field value
+	return RWMB_Helper::meta( $key, $field, $post_id );
+}
+
